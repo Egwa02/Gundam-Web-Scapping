@@ -3,6 +3,7 @@ import requests
 import pytz
 import os
 from datetime import datetime
+import json
 
 #Arrays to store the name,image,and price data
 Gname = []
@@ -20,24 +21,27 @@ Glist = soup.find_all('li',class_= 'item product product-item blue_wrap blue_wra
 
 #Making a funcation to Write a file, and get the name, image, and price
 def GundamLookOut():
-    
+    data=[]
     #Get the date
     Myzone = pytz.timezone("US/Central") 
-    timeForMe = datetime.now(Myzone)
-    time = timeForMe.now().strftime("%Y-%m-%d")
-    print(time+'\n')
+    DateForMe = datetime.now(Myzone)
+    Date = DateForMe.now().strftime("%Y-%m-%d")
+    
     
     #Make the GundamList.txt in subfolder 
-    subfolder_path = 'C:/Users/user/Gundam-Look-Out'
-    filename = f"GundamList.txt"
-    filepath = os.path.join(subfolder_path, filename)
-    print()
+    subfolder_path = 'C:/Users/alija/Gundam-Look-Out'
+    filepath_json = os.path.join(subfolder_path, "Gundamlist.json")
     
     #Opne the txt file 
-    GundamList = open(filepath, 'w', encoding='utf-8')
+    GundamList = open(filepath_json, 'w', encoding='utf-8')
     
-    GundamList.write(time+'\n')
-    GundamList.write('\n')
+    with open(filepath_json, "w") as outfile:
+        outfile.write(f'"Date": "{Date}",\n')
+        
+    data = {
+    "Date": Date,
+    "items": []
+    }
     
     #Gets the name of the Gundam Modle
     for Gunum in soup.find_all('a', class_='product-item-link'):
@@ -55,10 +59,16 @@ def GundamLookOut():
     
     #Writes in the txt file the data it collected            
     for image,name,price in zip(Gimage,Gname,Gprice):
-            GundamList.write('Image:'+ image + '\n')
-            GundamList.write('Name:'+ name + '\n')
-            GundamList.write('Cost:'+ price + '\n')
-            GundamList.write('\n')
+        name = name.replace("\n", "").strip()
+        item = {
+            "image": image,
+            "name": name,
+            "price": price
+        }
+        data["items"].append(item)
+        json_data = json.dumps(data,indent=4)
+        with open(filepath_json, "w") as outfile:
+            outfile.write(json_data)
     #closes the txt file
     GundamList.close()
 
