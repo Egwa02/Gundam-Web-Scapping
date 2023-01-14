@@ -4,10 +4,12 @@ import pytz
 import os
 from datetime import datetime
 
+#Arrays to store the name,image,and price data
 Gname = []
 Gimage =[]
 Gprice =[]
 
+#Making the start of the webscarping with BeatifuleSoup
 def getdata(url): 
     r = requests.get(url) 
     return r.text 
@@ -16,42 +18,51 @@ html_text = getdata('https://www.gundamplanet.com/catalogsearch/result/index/sho
 soup = BeautifulSoup(html_text, 'lxml')
 Glist = soup.find_all('li',class_= 'item product product-item blue_wrap blue_wrap')
 
+#Making a funcation to Write a file, and get the name, image, and price
 def GundamLookOut():
     
+    #Get the date
     Myzone = pytz.timezone("US/Central") 
     timeForMe = datetime.now(Myzone)
     time = timeForMe.now().strftime("%Y-%m-%d")
     print(time+'\n')
     
-    subfolder_path = 'C:/Users/alija/Gundam-Look-Out/GS'
+    #Make the GundamList.txt in subfolder 
+    subfolder_path = 'C:/Users/alija/Gundam-Look-Out'
     filename = f"GundamList.txt"
     filepath = os.path.join(subfolder_path, filename)
     print()
     
-    
+    #Opne the txt file 
     GundamList = open(filepath, 'w', encoding='utf-8')
     
     GundamList.write(time+'\n')
     GundamList.write('\n')
     
+    #Gets the name of the Gundam Modle
     for Gunum in soup.find_all('a', class_='product-item-link'):
                 name = Gunum.string
                 if name not in Gname:
                     Gname.append(name)
-                
+    
+    #Gets the image of the Gundam Modle
     for Gunage in soup.find_all('img', class_ ='product-image-photo'):
                 Gimage.append(Gunage['src'])
-                
+    
+    #Gets the price of the Gundam Modle
     for Gunice in soup.find_all('span', class_ ='price'):
                 Gprice.append(Gunice.text)
-                
+    
+    #Writes in the txt file the data it collected            
     for image,name,price in zip(Gimage,Gname,Gprice):
             GundamList.write('Image:'+ image + '\n')
             GundamList.write('Name:'+ name + '\n')
             GundamList.write('Cost:'+ price + '\n')
             GundamList.write('\n')
+    #closes the txt file
     GundamList.close()
-                
+
+#Runs the function
 GundamLookOut()
 
 
