@@ -29,7 +29,7 @@ def GundamLookOut():
     
     
     #Make the GundamList.txt in subfolder 
-    subfolder_path = 'C:/Users/alija/Gundam-Look-Out'
+    subfolder_path = 'C:/Users/user/Gundam-Look-Out'
     filepath_json = os.path.join(subfolder_path, "Gundamlist.json")
     
     #Opne the txt file 
