@@ -23,9 +23,10 @@ def GundamLookOut():
     time = timeForMe.now().strftime("%Y-%m-%d")
     print(time+'\n')
     
-    subfolder_path = 'GS'
+    subfolder_path = 'C:/Users/alija/Gundam-Look-Out/GS'
     filename = f"GundamList.txt"
     filepath = os.path.join(subfolder_path, filename)
+    print()
     
     
     GundamList = open(filepath, 'w', encoding='utf-8')
