@@ -28,7 +28,7 @@ def GundamLookOut():
     print(time+'\n')
     
     #Make the GundamList.txt in subfolder 
-    subfolder_path = 'C:/Users/alija/Gundam-Look-Out'
+    subfolder_path = 'C:/Users/user/Gundam-Look-Out'
     filename = f"GundamList.txt"
     filepath = os.path.join(subfolder_path, filename)
     print()
