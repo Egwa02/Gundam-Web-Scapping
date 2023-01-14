@@ -1,0 +1,57 @@
+from bs4 import BeautifulSoup
+import requests
+import pytz
+import os
+from datetime import datetime
+
+Gname = []
+Gimage =[]
+Gprice =[]
+
+def getdata(url): 
+    r = requests.get(url) 
+    return r.text 
+
+html_text = getdata('https://www.gundamplanet.com/catalogsearch/result/index/show_in/293/mst_stock/2/?cat=3,5&mst_stock=2&q=gundam')
+soup = BeautifulSoup(html_text, 'lxml')
+Glist = soup.find_all('li',class_= 'item product product-item blue_wrap blue_wrap')
+
+def GundamLookOut():
+    
+    Myzone = pytz.timezone("US/Central") 
+    timeForMe = datetime.now(Myzone)
+    time = timeForMe.now().strftime("%Y-%m-%d")
+    print(time+'\n')
+    
+    subfolder_path = 'GS'
+    filename = f"GundamList.txt"
+    filepath = os.path.join(subfolder_path, filename)
+    
+    
+    GundamList = open(filepath, 'w', encoding='utf-8')
+    
+    GundamList.write(time+'\n')
+    GundamList.write('\n')
+    
+    for Gunum in soup.find_all('a', class_='product-item-link'):
+                name = Gunum.string
+                if name not in Gname:
+                    Gname.append(name)
+                
+    for Gunage in soup.find_all('img', class_ ='product-image-photo'):
+                Gimage.append(Gunage['src'])
+                
+    for Gunice in soup.find_all('span', class_ ='price'):
+                Gprice.append(Gunice.text)
+                
+    for image,name,price in zip(Gimage,Gname,Gprice):
+            GundamList.write('Image:'+ image + '\n')
+            GundamList.write('Name:'+ name + '\n')
+            GundamList.write('Cost:'+ price + '\n')
+            GundamList.write('\n')
+    GundamList.close()
+                
+GundamLookOut()
+
+
+
