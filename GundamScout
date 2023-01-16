@@ -9,6 +9,7 @@ import json
 Gname = []
 Gimage =[]
 Gprice =[]
+print ( "ali is my fav negro")
 
 #Making the start of the webscarping with BeatifuleSoup
 def getdata(url): 
